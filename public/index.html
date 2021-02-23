@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat App</title>
+        <link rel="icon" href="/img/favicon.png">
+        <link rel="stylesheet" href="/css/styles.css">
+    </head>
+    <body>
+        <div class="main-content">
+            <header>
+                <h1>API для получения акутальной базы запчастей на основе (http://api.phaeton.kz/)</h1>
+            </header>
+
+            <div id="filters-wrapper">
+                <form>
+                    <legend>Version 1<small>Single buttons</small></legend>
+                    <div class="checkbox">
+                        <input type="button" id="checkall1" class="btn btn-link" value="Un/check All">
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="check1"> Check me out
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="check1"> Check me out
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="check1"> Check me out
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <button>Получить Базу</button>
+        </div>
+
+        <h2>Логи</h2>
+        <div id="logs_wrapper">
+            <div class="results">
+                <h6 style="color: darkgreen">Успешные запросы:</h6>
+                <p>0</p>
+            </div>
+            <div class="results">
+                <h6 style="color: darkred">Проваленные запросы:</h6>
+                <p>0</p>
+            </div>
+        </div>
+
+        <script id="logs-template" type="text/html">
+            <div class="results">
+                <h6 style="color: darkgreen">Успешные запросы:</h6>
+                <p>{{successRequests}}</p>
+            </div>
+            <div class="results">
+                <h6 style="color: darkred">Проваленные запросы:</h6>
+                <p>{{errorRequests}}</p>
+            </div>
+        </script>
+
+        <script id="footer-template" type="text/html">
+            <footer>
+                <p>{{date}}</p>
+            </footer>
+        </script>
+
+        <div id="footer">
+
+        </div>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/chat.js"></script>
+    </body>
+</html>
