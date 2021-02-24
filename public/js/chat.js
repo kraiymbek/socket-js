@@ -36,8 +36,14 @@ const excelFieldsData = [
         disabled: true,
     },
     {
-        name: 'AvailableCount',
-        value: 'AvailableCount',
+        name: 'Price',
+        value: 'Price',
+        rus: '',
+        checked: true,
+    },
+    {
+        name: 'PriceWithoutDiscount',
+        value: 'PriceWithoutDiscount',
         rus: '',
         checked: true,
     },
