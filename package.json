@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "bad-words": "^3.0.0",
+    "bootstrap": "^4.6.0",
+    "bruteforce": "0.0.2",
     "exceljs": "^4.2.0",
     "express": "^4.16.4",
     "socket.io": "^2.2.0",
