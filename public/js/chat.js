@@ -51,7 +51,7 @@ const excelFieldsData = [
         name: 'PriceWithoutDiscount',
         value: 'PriceWithoutDiscount',
         rus: '',
-        checked: true,
+        checked: false,
     },
     {
         name: 'CleanArticle',
