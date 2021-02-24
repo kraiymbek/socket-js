@@ -36,6 +36,12 @@ const excelFieldsData = [
         disabled: true,
     },
     {
+        name: 'AvailableCount',
+        value: 'AvailableCount',
+        rus: '',
+        checked: true,
+    },
+    {
         name: 'CleanArticle',
         value: 'CleanArticle',
         rus: '',
@@ -126,12 +132,6 @@ const excelFieldsData = [
         checked: false,
     },
     {
-        name: 'AvailableCount',
-        value: 'AvailableCount',
-        rus: '',
-        checked: false,
-    },
-    {
         name: 'SupplierCode',
         value: 'SupplierCode',
         rus: '',
@@ -160,21 +160,21 @@ const excelFieldsData = [
 const filterFieldsData = [
     {
         name: 'Товары на складах Phaeton',
-        value: 'phaetonStocks',
+        value: 'InStock',
         rus: '',
         checked: true,
         disabled: true,
     },
     {
         name: 'Товары локальных поставщиков',
-        value: 'localSuppliers',
+        value: 'LocalSuppliers',
         rus: '',
         checked: true,
         disabled: false,
     },
     {
         name: 'Товары удаленных поставщиков',
-        value: 'remoteSuppliers',
+        value: 'RemoteSuppliers',
         rus: '',
         checked: true,
         disabled: false,
@@ -199,36 +199,16 @@ document.querySelector('#filter-checkboxes-wrapper').innerHTML = filterExcelChec
 
 socket.on('excelFormationProcess', (messages) => {
     const html = Mustache.render(logsTemplate, {
-        successRequests: messages.successRequest,
-        errorRequests: messages.errorRequest,
+        logs: messages.logs,
     })
     document.querySelector('#logs_wrapper').innerHTML = html
 })
 
-// const stream = ss.createStream();
-// let binaryString = "";
-//
-// ss(socket).emit('excelFile', stream);
-//
-// stream.on('data', function(data) {
-//     for(var i=0;i<data.length;i++) {
-//         binaryString+=String.fromCharCode(data[i]);
-//     }
-// });
-//
-// stream.on('end', function() {
-//     console.log('end');
-//
-//     console.log(window.btoa(binaryString))
-// });
-
 ss(socket).on('excelFile', function(stream,data) {
-    console.log('received', data, stream);
 
     let binaryString = "";
 
     stream.on('data', function (data) {
-        console.log('data')
 
         for (let i = 0; i < data.length; i++) {
             binaryString += String.fromCharCode(data[i]);
@@ -237,7 +217,6 @@ ss(socket).on('excelFile', function(stream,data) {
     });
 
     stream.on('end', function (data) {
-        console.log('end')
         const url = "data:application/vnd.ms-excel;base64," + window.btoa(binaryString);
         let a = document.createElement('a');
         a.href = url;
@@ -248,28 +227,69 @@ ss(socket).on('excelFile', function(stream,data) {
     });
 });
 
+const progress = document.querySelector('.pure-material-progress-linear');
+
 $getDataBtn.addEventListener('click', (e) => {
     $getDataBtn.textContent = 'Loading...';
+    progress.style.display = 'block';
     $getDataBtn.setAttribute('disabled', 'true');
+    let submitError = false;
 
-    const filterChecked = {};
-    const excelChecked = {};
-    const selectedCity = document.querySelector('.selectpicker').value;
-    document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        if (checkbox.checked === true) {
-            filterChecked[checkbox.value] = checkbox.checked;
+    const input = document.querySelector('.brute-force');
+    const bruteLengthSelectorValue = document.querySelector('.brut-length').value;
+    const formatedInput = input.value.trim().split(',');
+
+    const dictionary = {};
+
+    for(let i = 0; formatedInput.length > i; i++) {
+        if (formatedInput[i].length !== 1) {
+            submitError = true;
+            break;
         }
-    })
 
-    document.querySelectorAll('.excel-checkbox').forEach(checkbox => {
-        if (checkbox.checked === true) {
-            excelChecked[checkbox.value] = checkbox.checked;
+        if (dictionary[formatedInput[i]]) {
+            dictionary[formatedInput[i]] += 1;
+        } else {
+            dictionary[formatedInput[i]] = 1;
         }
-    })
+    }
 
-    socket.emit('getStockData', { excelChecked, filterChecked, selectedCity }, (error) => {
+    for (let key in dictionary) {
+            if (dictionary[key] !== 1) {
+                submitError = true;
+                break;
+            }
+    }
+
+    const helperText = document.querySelector('.helper-text');
+
+    if (submitError) {
         $getDataBtn.textContent = buttonCurrentText;
         $getDataBtn.removeAttribute('disabled');
-        console.log('Message delivered!')
-    })
+        helperText.style.display = 'block';
+        helperText.textContent = 'Неверный формат!';
+        progress.style.display = 'none';
+    } else {
+        helperText.style.display = 'none';
+        const filterChecked = {};
+        const excelChecked = {};
+        const selectedCity = document.querySelector('.selectpicker').value;
+        document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+            if (checkbox.checked === true) {
+                filterChecked[checkbox.value] = checkbox.checked;
+            }
+        })
+
+        document.querySelectorAll('.excel-checkbox').forEach(checkbox => {
+            if (checkbox.checked === true) {
+                excelChecked[checkbox.value] = checkbox.checked;
+            }
+        })
+
+        socket.emit('getStockData', { excelChecked, filterChecked, selectedCity, bruteLengthSelectorValue, formatedInput  }, (error) => {
+            $getDataBtn.textContent = buttonCurrentText;
+            $getDataBtn.removeAttribute('disabled');
+            progress.style.display = 'none';
+        })
+    }
 })

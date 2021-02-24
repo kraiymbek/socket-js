@@ -49,21 +49,59 @@
                                 </fieldset>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md">
+                                <fieldset>
+                                    <legend>
+                                        Подборка артикуля
+                                    </legend>
+                                    <div>
+                                        <h6>Примеры для подборки артикуля*</h6>
+                                        <p>Скопировать паттерны ниже</p>
+
+                                        <ul>
+                                            <li>Для добавления заглавных букв или буквы скопировать --> A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z</li>
+                                            <li>Для добавления прописных букв или буквы скопировать --> a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z</li>
+                                            <li>Для добавления цифр скопировать --> 1,2,3,4,5,6,7,8,9,0</li>
+                                            <li style="color: darkred">Обязательно разделять знаки запятыми*</li>
+                                            <li style="color: green">Можно комбинировать заглавные, прописные буквы и цифры</li>
+                                            <li style="color: cornflowerblue">Примеры ввода: 0,1,A</li>
+                                            <li style="color: cornflowerblue">Примеры ввода: 1,A,4,a</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; flex-direction: column; margin-bottom: 15px">
+                                            <label>Введите паттерн</label>
+                                            <input class="brute-force" type="text" placeholder="Введите патерн" value="A,1">
+                                            <p class="helper-text" style="display: none;color: darkred"></p>
+                                        </div>
+
+                                        <div style="display: flex; flex-direction: column;">
+                                            <label>Выберите макс длину артикуля</label>
+                                            <select class="brut-length"
+                                                    data-style="form-control"
+                                                    title="Выберите город">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
                     </div>
 
                     <button class="btn btn-primary" style="margin: 20px 0;">Получить Базу</button>
+                        <progress style="display: none" class="pure-material-progress-linear"/>
                 </div>
 
                 <h2>Логи</h2>
                 <div id="logs_wrapper">
-                    <div class="results">
-                        <h6 style="color: darkgreen">Успешные запросы:</h6>
-                        <p>0</p>
-                    </div>
-                    <div class="results">
-                        <h6 style="color: darkred">Проваленные запросы:</h6>
-                        <p>0</p>
-                    </div>
+
                 </div>
                 <div id="footer">
 
@@ -87,22 +125,16 @@
         </div>
         {{/checkboxList}}
     </script>
-
-        <script id="logs-template" type="text/html">
-            <div class="results">
-                <h6 style="color: darkgreen">Успешные запросы:</h6>
-                <p>{{successRequests}}</p>
-            </div>
-            <div class="results">
-                <h6 style="color: darkred">Проваленные запросы:</h6>
-                <p>{{errorRequests}}</p>
-            </div>
-        </script>
-
         <script id="footer-template" type="text/html">
             <footer>
                 <p>{{date}}</p>
             </footer>
+        </script>
+
+        <script id="logs-template" type="text/html">
+            {{#logs}}
+            <p class="{{status}}">{{message}}</p>
+            {{/logs}}
         </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
