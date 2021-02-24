@@ -61,6 +61,7 @@ io.on('connection', (socket) => {
             io.emit('excelFormationProcess', { logs });
             continueRequest = true;
         } catch (err) {
+            callback();
             logs.push({ status: 'error', message: `--------- Провал инициализации сервиса -----------------`})
             io.emit('excelFormationProcess', { logs });
 
@@ -86,66 +87,70 @@ io.on('connection', (socket) => {
                 logs.push({ status: 'system', message: `Идет подбор артикуля ${estimatedArticule}`})
                 io.emit('excelFormationProcess', { logs });
 
-                firstStepPromises.push(
-                    getBrands(selectedCity, estimatedArticule)
-                        .then(data => {
-                            logs.push({ status: 'success', message: `Получены бренды для артикуля ${estimatedArticule}`})
-                            io.emit('excelFormationProcess', { logs });
-                            return data.Items;
-                        })
-                        .then(res => {
-                            const promises = [];
-                            res.forEach(item => {
-                                promises.push(
-                                    getProducts(selectedCity, item.Article, item.Brand, message.filterChecked)
-                                        .then(res => res.Items)
-                                        .then(products => {
-                                            products.forEach(product => {
-                                                for(let key in product) {
-                                                    if (message.excelChecked[key]) {
-                                                        rowAdding[key] = product[key];
+                setTimeout(() => {
+                    firstStepPromises.push(
+                        getBrands(selectedCity, estimatedArticule)
+                            .then(data => {
+                                logs.push({ status: 'success', message: `Получены бренды для артикуля ${estimatedArticule}`})
+                                io.emit('excelFormationProcess', { logs });
+                                return data.Items;
+                            })
+                            .then(res => {
+                                const promises = [];
+                                res.forEach(item => {
+                                    setTimeout(() => {
+                                        promises.push(
+                                            getProducts(selectedCity, item.Article, item.Brand, message.filterChecked)
+                                                .then(res => res.Items)
+                                                .then(products => {
+                                                    products.forEach(product => {
+                                                        for(let key in product) {
+                                                            if (message.excelChecked[key]) {
+                                                                rowAdding[key] = product[key];
+                                                            }
+                                                        }
+                                                        worksheet.addRow(rowAdding)
+                                                        logs.push({ status: 'success', message: `Получена позиция для артикуля ${product.Article} и бренда ${product.Brand}`})
+                                                        logs.push({ status: 'success', message: `В excel файл добавлена позиция артикул: ${rowAdding.Article}; название: ${rowAdding.Name}`})
+                                                    });
+                                                    io.emit('excelFormationProcess', { logs });
+                                                    return products;
+                                                })
+                                                .catch(err => {
+                                                    if (err && err.response.data) {
+                                                        if (err.response.data.Message) {
+                                                            logs.push({ status: 'error',
+                                                                message:'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.Message + ' на запросе артикуля' + item.Article + ' и бренда ' + item.Brand})
+                                                            io.emit('excelFormationProcess', { logs });
+                                                        }
+
+                                                        if (err.response.data.ErrorMessage) {
+                                                            logs.push({ status: 'error',
+                                                                message:'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.ErrorMessage + ' на запросе артикуля' + item.Article + ' и бренда ' + item.Brand});
+                                                            io.emit('excelFormationProcess', { logs });
+                                                        }
                                                     }
-                                                }
-                                                worksheet.addRow(rowAdding)
-                                                logs.push({ status: 'success', message: `Получена позиция для артикуля ${product.Article} и бренда ${product.Brand}`})
-                                                logs.push({ status: 'success', message: `В excel файл добавлена позиция артикул: ${rowAdding.Article}; название: ${rowAdding.Name}`})
-                                            });
-                                            io.emit('excelFormationProcess', { logs });
-                                            return products;
-                                        })
-                                        .catch(err => {
-                                            if (err && err.response.data) {
-                                                if (err.response.data.Message) {
-                                                    logs.push({ status: 'error',
-                                                        message:'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.Message + ' на запросе артикуля' + item.Article + ' и бренда ' + item.Brand})
-                                                    io.emit('excelFormationProcess', { logs });
-                                                }
+                                                })
+                                        )
+                                    }, 250);
+                                });
+                                return promises;
+                            })
+                            .catch(err => {
+                                if (err && err.response.data) {
+                                    if (err.response.data.Message) {
+                                        logs.push({ status: 'error', message: 'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.Message + ' на запросе артикуля ' + estimatedArticule})
+                                        io.emit('excelFormationProcess', { logs });
+                                    }
 
-                                                if (err.response.data.ErrorMessage) {
-                                                    logs.push({ status: 'error',
-                                                        message:'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.ErrorMessage + ' на запросе артикуля' + item.Article + ' и бренда ' + item.Brand});
-                                                    io.emit('excelFormationProcess', { logs });
-                                                }
-                                            }
-                                        })
-                                )
-                            });
-                            return promises;
-                        })
-                        .catch(err => {
-                            if (err && err.response.data) {
-                                if (err.response.data.Message) {
-                                    logs.push({ status: 'error', message: 'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.Message + ' на запросе артикуля ' + estimatedArticule})
-                                    io.emit('excelFormationProcess', { logs });
+                                    if (err.response.data.ErrorMessage) {
+                                        logs.push({ status: 'error', message: 'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.ErrorMessage + ' на запросе артикуля ' + estimatedArticule})
+                                        io.emit('excelFormationProcess', { logs });
+                                    }
                                 }
-
-                                if (err.response.data.ErrorMessage) {
-                                    logs.push({ status: 'error', message: 'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.ErrorMessage + ' на запросе артикуля ' + estimatedArticule})
-                                    io.emit('excelFormationProcess', { logs });
-                                }
-                            }
-                        })
-                )
+                            })
+                    )
+                }, 250);
             });
 
             Promise.allSettled(firstStepPromises)
