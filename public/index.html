@@ -49,7 +49,43 @@
                                 </fieldset>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin-bottom: 30px">
+                            <div class="col-md">
+                                <fieldset>
+                                    <legend>
+                                        Выберите метод подбора
+                                    </legend>
+                                    <select class="method"
+                                            data-style="form-control"
+                                            title="Выберите город">
+                                        <option value="methodBrandArticle" selected>По поиску артикул и бренда</option>
+                                        <option value="methodBrute">По подборке артикула</option>
+                                    </select>
+                                </fieldset>
+                                <div style="background-color: #1b1e21; height: 1px; margin: 15px 0;"></div>
+                            </div>
+                        </div>
+                        <div class="row method-brand-article">
+                            <div class="col-md">
+                                <fieldset>
+                                    <legend>
+                                        Метод поиска
+                                    </legend>
+                                </fieldset>
+
+                                <div style="display: flex; flex-direction: column; margin-bottom: 15px">
+                                    <label>Артикул</label>
+                                    <input class="articul-input" type="text" placeholder="Введите артикул">
+                                    <p class="helper-text-article" style="display: none;color: darkred"></p>
+                                </div>
+<!--                                <div style="display: flex; flex-direction: column; margin-bottom: 15px">-->
+<!--                                    <label>Бренд</label>-->
+<!--                                    <input class="brand-input" type="text" placeholder="Введите бренд">-->
+<!--                                    <p class="helper-text-brand" style="display: none;color: darkred"></p>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                        <div class="row method-brute">
                             <div class="col-md">
                                 <fieldset>
                                     <legend>
@@ -95,7 +131,7 @@
                             </div>
                     </div>
 
-                    <button class="btn btn-primary" style="margin: 20px 0;">Получить Базу</button>
+                        <button class="btn btn-primary" style="margin: 20px 0;">Получить Базу</button>
                         <progress style="display: none" class="pure-material-progress-linear"/>
                 </div>
 

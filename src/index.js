@@ -46,14 +46,29 @@ io.on('connection', (socket) => {
             column.width = 20
         });
 
-        const bruteForceData = bf({
-            len: message.bruteLengthSelectorValue,
-            chars: message.formatedInput,
-        });
+        let dataToBruteFoprce = [];
+
+        if (message.method.name === 'methodBrute') {
+            const bruteForceData = bf({
+                len: message.method.inputLength,
+                chars: message.method.chars,
+            });
+
+            dataToBruteFoprce = bruteForceData.filter(item => item !== '');
+        } else {
+            dataToBruteFoprce.push(message.method.articleInput);
+        }
+
+        console.log("dataToBruteFoprce", dataToBruteFoprce)
+
+
+
 
         logs.push({ status: 'system', message: `---------Инициализация сервиса-----------------`})
         io.emit('excelFormationProcess', { logs });
 
+
+        // init
         try {
             // init request
             await getBrands(selectedCity, 'АA1-------');
@@ -80,7 +95,8 @@ io.on('connection', (socket) => {
             }
         }
 
-        const dataToBruteFoprce = bruteForceData.filter(item => item !== '');
+
+        // next step
 
         if (continueRequest) {
             dataToBruteFoprce.forEach((estimatedArticule) => {

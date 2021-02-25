@@ -239,6 +239,28 @@ ss(socket).on('excelFile', function(stream,data) {
     });
 });
 
+const methodSelector = document.querySelector('.method');
+
+if (methodSelector.value === 'methodBrute') {
+    document.querySelector('.method-brute').style.display = 'block';
+    document.querySelector('.method-brand-article').style.display = 'none';
+} else {
+    console.log("value 2")
+    document.querySelector('.method-brute').style.display = 'none';
+    document.querySelector('.method-brand-article').style.display = 'block';
+}
+
+methodSelector.addEventListener('change',(e) => {
+    if (e.target.value === 'methodBrute') {
+        document.querySelector('.method-brute').style.display = 'block';
+        document.querySelector('.method-brand-article').style.display = 'none';
+    } else {
+        console.log("value 2")
+        document.querySelector('.method-brute').style.display = 'none';
+        document.querySelector('.method-brand-article').style.display = 'block';
+    }
+});
+
 const progress = document.querySelector('.pure-material-progress-linear');
 
 $getDataBtn.addEventListener('click', (e) => {
@@ -246,43 +268,67 @@ $getDataBtn.addEventListener('click', (e) => {
     progress.style.display = 'block';
     $getDataBtn.setAttribute('disabled', 'true');
     let submitError = false;
+    const bruteLengthSelectorValue = document.querySelector('.brut-length').value;
+    const helperText = document.querySelector('.helper-text');
+    const helperTextArticle = document.querySelector('.helper-text-article');
 
     const input = document.querySelector('.brute-force');
-    const bruteLengthSelectorValue = document.querySelector('.brut-length').value;
+    const articleInput = document.querySelector('.articul-input');
     const formatedInput = input.value.trim().split(',');
 
-    const dictionary = {};
 
-    for(let i = 0; formatedInput.length > i; i++) {
-        if (formatedInput[i].length !== 1) {
-            submitError = true;
-            break;
+
+    if (methodSelector.value === 'methodBrute') {
+        const dictionary = {};
+        for(let i = 0; formatedInput.length > i; i++) {
+            if (formatedInput[i].length !== 1) {
+                submitError = true;
+                break;
+            }
+
+            if (dictionary[formatedInput[i]]) {
+                dictionary[formatedInput[i]] += 1;
+            } else {
+                dictionary[formatedInput[i]] = 1;
+            }
         }
-
-        if (dictionary[formatedInput[i]]) {
-            dictionary[formatedInput[i]] += 1;
-        } else {
-            dictionary[formatedInput[i]] = 1;
-        }
-    }
-
-    for (let key in dictionary) {
+        for (let key in dictionary) {
             if (dictionary[key] !== 1) {
                 submitError = true;
                 break;
             }
+        }
+    } else {
+        if (!articleInput.value) {
+            submitError = true;
+        }
     }
 
-    const helperText = document.querySelector('.helper-text');
+
 
     if (submitError) {
         $getDataBtn.textContent = buttonCurrentText;
         $getDataBtn.removeAttribute('disabled');
-        helperText.style.display = 'block';
-        helperText.textContent = 'Неверный формат!';
         progress.style.display = 'none';
+
+
+        if (methodSelector.value === 'methodBrute') {
+            helperText.style.display = 'block';
+            helperText.textContent = 'Неверный формат!';
+        } else {
+            if (!articleInput.value) {
+                helperTextArticle.style.display = 'block';
+                helperTextArticle.textContent = 'Обязательное поле!';
+            } else {
+                helperTextArticle.style.display = 'none';
+            }
+        }
+
+
     } else {
         helperText.style.display = 'none';
+        helperTextArticle.style.display = 'none';
+
         const filterChecked = {};
         const excelChecked = {};
         const selectedCity = document.querySelector('.selectpicker').value;
@@ -291,14 +337,24 @@ $getDataBtn.addEventListener('click', (e) => {
                 filterChecked[checkbox.value] = checkbox.checked;
             }
         })
-
         document.querySelectorAll('.excel-checkbox').forEach(checkbox => {
             if (checkbox.checked === true) {
                 excelChecked[checkbox.value] = checkbox.checked;
             }
         })
 
-        socket.emit('getStockData', { excelChecked, filterChecked, selectedCity, bruteLengthSelectorValue, formatedInput  }, (error) => {
+        const method = {
+            name: methodSelector.value,
+        };
+
+        if (methodSelector.value === 'methodBrute') {
+            method.inputLength = bruteLengthSelectorValue;
+            method.chars = formatedInput;
+        } else {
+            method.articleInput = articleInput.value;
+        }
+
+        socket.emit('getStockData', { excelChecked, filterChecked, selectedCity, method }, (error) => {
             $getDataBtn.textContent = buttonCurrentText;
             $getDataBtn.removeAttribute('disabled');
             progress.style.display = 'none';

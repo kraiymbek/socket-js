@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/9d712785-c22f-4db4-936e-29c5ee0bf772/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/parser-for-rem",
+    "appService.deploySubpath": "."
+}
