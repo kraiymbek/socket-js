@@ -97,6 +97,11 @@ p.system {
     color: green;
 }
 
+p.main {
+    color: cornflowerblue;
+    font-size: 14px;
+}
+
 p {
     margin: 0 2px;
     font-size: 12px;

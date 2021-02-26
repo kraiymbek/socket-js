@@ -95,6 +95,9 @@ io.on('connection', (socket) => {
             }
         }
 
+        let commonIndex = 0;
+        let commonRows = 0;
+
 
         // next step
 
@@ -103,7 +106,6 @@ io.on('connection', (socket) => {
                 logs.push({ status: 'system', message: `Идет подбор артикуля ${estimatedArticule}`})
                 io.emit('excelFormationProcess', { logs });
 
-                setTimeout(() => {
                     firstStepPromises.push(
                         getBrands(selectedCity, estimatedArticule)
                             .then(data => {
@@ -113,20 +115,31 @@ io.on('connection', (socket) => {
                             })
                             .then(res => {
                                 const promises = [];
+                                logs.push({ status: 'main', message: `----> ОБЩЕЕ КОЛИЧЕСТВО ПОЛУЧЕННЫХ ПОЗИИЦИИ(Брендов) ПО АРТИКУЛУ --${estimatedArticule}-- = ${res.length} штук`})
+                                io.emit('excelFormationProcess', { logs });
+
                                 res.forEach(item => {
-                                    setTimeout(() => {
-                                        promises.push(
+                                    logs.push({ status: 'success', message: `Получены входные данные для запроса получении позиции артикул ${item.Article} и бренда ${item.Brand}`})
+                                    io.emit('excelFormationProcess', { logs });
+
+                                    promises.push(
                                             getProducts(selectedCity, item.Article, item.Brand, message.filterChecked)
                                                 .then(res => res.Items)
                                                 .then(products => {
-                                                    products.forEach(product => {
+                                                    logs.push({ status: 'main', message: `-------------- Получена позиция для артикуля --${item.Article}-- и бренда --${item.Brand}-- === ${products.length} штук`})
+                                                    io.emit('excelFormationProcess', { logs });
+                                                    commonRows += products.length;
+
+                                                    products.forEach((product, index) => {
                                                         for(let key in product) {
                                                             if (message.excelChecked[key]) {
                                                                 rowAdding[key] = product[key];
                                                             }
                                                         }
+
+                                                        commonIndex++;
                                                         worksheet.addRow(rowAdding)
-                                                        logs.push({ status: 'success', message: `Получена позиция для артикуля ${product.Article} и бренда ${product.Brand}`})
+                                                        logs.push({ status: 'success', message: `#${commonIndex} Получена позиция для артикуля ${product.Article} и бренда ${product.Brand}`})
                                                         logs.push({ status: 'success', message: `В excel файл добавлена позиция артикул: ${rowAdding.Article}; название: ${rowAdding.Name}`})
                                                     });
                                                     io.emit('excelFormationProcess', { logs });
@@ -148,7 +161,6 @@ io.on('connection', (socket) => {
                                                     }
                                                 })
                                         )
-                                    }, 250);
                                 });
                                 return promises;
                             })
@@ -166,7 +178,6 @@ io.on('connection', (socket) => {
                                 }
                             })
                     )
-                }, 250);
             });
 
             Promise.allSettled(firstStepPromises)
@@ -177,9 +188,11 @@ io.on('connection', (socket) => {
                     return Promise.allSettled(res[0].value);
                 })
                 .then(data => {
-                    logs.push({status: 'success', message: `Excel сформирован!`})
                     const stream = ss.createStream();
                     workbook.xlsx.write(stream);
+                    logs.push({status: 'success', message: `Excel сформирован!`})
+                    logs.push({ status: 'main', message: `-------------- Записано ${commonRows} штук позиции`})
+                    io.emit('excelFormationProcess', { logs });
                     ss(socket).emit('excelFile', stream, {});
                     callback()
                 })

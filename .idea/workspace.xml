@@ -11,7 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf96a438-2025-48fe-b83e-f2df17ac5808" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +31,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/n3-17-24-deployment" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/challenge" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -52,7 +54,8 @@
       <updated>1614098341912</updated>
       <workItem from="1614098342975" duration="9999000" />
       <workItem from="1614151402099" duration="36507000" />
-      <workItem from="1614259985525" duration="4772000" />
+      <workItem from="1614259985525" duration="5443000" />
+      <workItem from="1614320492097" duration="4736000" />
     </task>
     <servers />
   </component>
@@ -72,10 +75,11 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1614187333964">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1614273632274">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1614187333964" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1614273632274" />
     <state x="475" y="145" width="586" height="534" key="find.popup" timestamp="1614191864100">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
