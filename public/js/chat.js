@@ -192,6 +192,13 @@ const filterFieldsData = [
         checked: true,
         disabled: false,
     },
+    {
+        name: 'Включить аналоги',
+        value: 'includeAnalogs',
+        rus: '',
+        checked: true,
+        disabled: false,
+    },
 ];
 
 const excelCheckboxTemplate = document.querySelector('#checkbox-template').innerHTML;

@@ -32,6 +32,13 @@ const getProducts = (city, article, brand, sources) => {
         params['Sources[]'] = 3;
     }
 
+    if (sources.includeAnalogs) {
+        params['includeAnalogs'] = true;
+    } else {
+        params['includeAnalogs'] = false;
+    }
+
+
     return axios.get(encodeURI(`http://api.phaeton.kz/api/Search`), { params })
         .then(res => res.data);
 }
