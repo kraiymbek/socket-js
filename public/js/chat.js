@@ -1,5 +1,6 @@
 const socket = io()
 
+let file = null;
 const $getDataBtn = document.querySelector('button')
 
 let footerTemplate = document.querySelector('#footer-template').innerHTML
@@ -240,24 +241,61 @@ ss(socket).on('excelFile', function(stream,data) {
 });
 
 const methodSelector = document.querySelector('.method');
+const excelUploadElement = document.querySelector("#excelFile");
+const helperTextExcel = document.querySelector('.helper-text-excel');
+
+
+excelUploadElement.addEventListener("change", function () {
+    if (this.files && this.files[0]) {
+
+        if (this.files[0] && this.files[0].name.slice(-4) === 'xlsx') {
+            helperTextExcel.style.display = 'none';
+            $getDataBtn.removeAttribute('disabled')
+            file = this.files[0];
+        } else {
+            $getDataBtn.setAttribute('disabled', 'true');
+            helperTextExcel.style.display = 'block';
+            helperTextExcel.textContent = 'Неверный формат файла! Нужен xlsx excel файл!';
+        }
+
+    }
+}, false);
+
 
 if (methodSelector.value === 'methodBrute') {
     document.querySelector('.method-brute').style.display = 'block';
     document.querySelector('.method-brand-article').style.display = 'none';
-} else {
-    console.log("value 2")
+    document.querySelector('.method-import-excel').style.display = 'none';
+    $getDataBtn.removeAttribute('disabled')
+} else if (methodSelector.value === 'methodBrandArticle') {
+    document.querySelector('.method-import-excel').style.display = 'none';
     document.querySelector('.method-brute').style.display = 'none';
     document.querySelector('.method-brand-article').style.display = 'block';
+    $getDataBtn.removeAttribute('disabled')
+} else if (methodSelector.value === 'methodImportExcel') {
+    document.querySelector('.method-import-excel').style.display = 'block';
+    document.querySelector('.method-brute').style.display = 'none';
+    document.querySelector('.method-brand-article').style.display = 'none';
+    $getDataBtn.setAttribute('disabled', true)
 }
+
 
 methodSelector.addEventListener('change',(e) => {
     if (e.target.value === 'methodBrute') {
         document.querySelector('.method-brute').style.display = 'block';
         document.querySelector('.method-brand-article').style.display = 'none';
-    } else {
-        console.log("value 2")
+        document.querySelector('.method-import-excel').style.display = 'none';
+        $getDataBtn.removeAttribute('disabled')
+    } else if (e.target.value === 'methodBrandArticle') {
+        document.querySelector('.method-import-excel').style.display = 'none';
         document.querySelector('.method-brute').style.display = 'none';
         document.querySelector('.method-brand-article').style.display = 'block';
+        $getDataBtn.removeAttribute('disabled')
+    } else if (e.target.value === 'methodImportExcel') {
+        $getDataBtn.setAttribute('disabled', true)
+        document.querySelector('.method-import-excel').style.display = 'block';
+        document.querySelector('.method-brute').style.display = 'none';
+        document.querySelector('.method-brand-article').style.display = 'none';
     }
 });
 
@@ -298,66 +336,86 @@ $getDataBtn.addEventListener('click', (e) => {
                 break;
             }
         }
-    } else {
+    } else if (methodSelector.value === 'methodBrandArticle') {
         if (!articleInput.value) {
             submitError = true;
         }
     }
 
 
-
-    if (submitError) {
-        $getDataBtn.textContent = buttonCurrentText;
-        $getDataBtn.removeAttribute('disabled');
-        progress.style.display = 'none';
-
-
-        if (methodSelector.value === 'methodBrute') {
-            helperText.style.display = 'block';
-            helperText.textContent = 'Неверный формат!';
-        } else {
-            if (!articleInput.value) {
-                helperTextArticle.style.display = 'block';
-                helperTextArticle.textContent = 'Обязательное поле!';
-            } else {
-                helperTextArticle.style.display = 'none';
-            }
-        }
-
-
-    } else {
-        helperText.style.display = 'none';
-        helperTextArticle.style.display = 'none';
-
-        const filterChecked = {};
-        const excelChecked = {};
-        const selectedCity = document.querySelector('.selectpicker').value;
-        document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-            if (checkbox.checked === true) {
-                filterChecked[checkbox.value] = checkbox.checked;
-            }
-        })
-        document.querySelectorAll('.excel-checkbox').forEach(checkbox => {
-            if (checkbox.checked === true) {
-                excelChecked[checkbox.value] = checkbox.checked;
-            }
-        })
-
-        const method = {
-            name: methodSelector.value,
-        };
-
-        if (methodSelector.value === 'methodBrute') {
-            method.inputLength = bruteLengthSelectorValue;
-            method.chars = formatedInput;
-        } else {
-            method.articleInput = articleInput.value;
-        }
-
-        socket.emit('getStockData', { excelChecked, filterChecked, selectedCity, method }, (error) => {
+        if (submitError) {
             $getDataBtn.textContent = buttonCurrentText;
             $getDataBtn.removeAttribute('disabled');
             progress.style.display = 'none';
-        })
-    }
+
+
+            if (methodSelector.value === 'methodBrute') {
+                helperText.style.display = 'block';
+                helperText.textContent = 'Неверный формат!';
+            } else if (methodSelector.value === 'methodBrandArticle') {
+                if (!articleInput.value) {
+                    helperTextArticle.style.display = 'block';
+                    helperTextArticle.textContent = 'Обязательное поле!';
+                } else {
+                    helperTextArticle.style.display = 'none';
+                }
+            }
+
+
+        } else {
+            helperText.style.display = 'none';
+            helperTextArticle.style.display = 'none';
+
+            const filterChecked = {};
+            const excelChecked = {};
+            const selectedCity = document.querySelector('.selectpicker').value;
+            document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+                if (checkbox.checked === true) {
+                    filterChecked[checkbox.value] = checkbox.checked;
+                }
+            })
+            document.querySelectorAll('.excel-checkbox').forEach(checkbox => {
+                if (checkbox.checked === true) {
+                    excelChecked[checkbox.value] = checkbox.checked;
+                }
+            })
+
+            const method = {
+                name: methodSelector.value,
+            };
+
+            if (methodSelector.value === 'methodBrute') {
+                method.inputLength = bruteLengthSelectorValue;
+                method.chars = formatedInput;
+            } else if (methodSelector.value === 'methodBrandArticle') {
+                method.articleInput = articleInput.value;
+            }
+
+
+            if (methodSelector.value !== 'methodImportExcel') {
+                socket.emit('getStockData', { excelChecked, filterChecked, selectedCity, method }, (error) => {
+                    $getDataBtn.textContent = buttonCurrentText;
+                    $getDataBtn.removeAttribute('disabled');
+                    progress.style.display = 'none';
+                })
+            } else {
+                if (file) {
+                    var stream = ss.createStream();
+                    ss(socket).emit('importExcelFile', stream, { size: file.size, name: file.name, excelChecked, filterChecked, selectedCity, method }, (error) => {
+                            $getDataBtn.textContent = buttonCurrentText;
+                            $getDataBtn.removeAttribute('disabled');
+                            progress.style.display = 'none';
+                    });
+                    const blobStream = ss.createBlobReadStream(file).pipe(stream);
+                    let size = 0;
+
+                    blobStream.on('data', function(chunk) {
+                        size += chunk.length;
+                        console.log(Math.floor(size / file.size * 100) + '%');
+                    });
+
+                    blobStream.pipe(stream);
+                }
+            }
+        }
 })

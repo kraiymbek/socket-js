@@ -1,138 +1,152 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Phaeton database</title>
-        <link rel="icon" href="/img/favicon.png">
-        <link rel="stylesheet" href="/css/styles.css">
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-    </head>
-    <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg center-block">
-                <div class="main-content">
-                    <header>
-                        <h1>API для получения акутальной базы запчастей на основе (http://api.phaeton.kz/)</h1>
-                    </header>
+<head>
+    <title>Phaeton database</title>
+    <link rel="icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg center-block">
+            <div class="main-content">
+                <header>
+                    <h1>API для получения акутальной базы запчастей на основе (http://api.phaeton.kz/)</h1>
+                </header>
 
-                    <div id="filters-wrapper">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <fieldset>
-                                    <legend>
-                                        Фильтры запросов
-                                    </legend>
-                                    <div id="filter-checkboxes-wrapper">
+                <div id="filters-wrapper">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <fieldset>
+                                <legend>
+                                    Фильтры запросов
+                                </legend>
+                                <div id="filter-checkboxes-wrapper">
 
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div class="col-md-4">
-                                <fieldset>
-                                    <legend>
-                                        Выборка склада
-                                    </legend>
-                                    <select class="selectpicker show-menu-arrow"
-                                            data-style="form-control"
-                                            title="Выберите город">
-                                        <option value="almaty">Алматы</option>
-                                    </select>
-                                </fieldset>
-                            </div>
-                            <div class="col-md-4">
-                                <fieldset>
-                                    <legend>
-                                        Поля для отображения в Excel
-                                    </legend>
-                                    <div id="excel-checkboxes-wrapper">
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-bottom: 30px">
-                            <div class="col-md">
-                                <fieldset>
-                                    <legend>
-                                        Выберите метод подбора
-                                    </legend>
-                                    <select class="method"
-                                            data-style="form-control"
-                                            title="Выберите город">
-                                        <option value="methodBrandArticle" selected>По поиску артикулу</option>
-                                        <option value="methodBrute">По подборке артикула</option>
-                                    </select>
-                                </fieldset>
-                                <div style="background-color: #1b1e21; height: 1px; margin: 15px 0;"></div>
-                            </div>
-                        </div>
-                        <div class="row method-brand-article">
-                            <div class="col-md">
-                                <fieldset>
-                                    <legend>
-                                        Метод поиска
-                                    </legend>
-                                </fieldset>
-
-                                <div style="display: flex; flex-direction: column; margin-bottom: 15px">
-                                    <label>Артикул</label>
-                                    <input class="articul-input" type="text" placeholder="Введите артикул">
-                                    <p class="helper-text-article" style="display: none;color: darkred"></p>
                                 </div>
-<!--                                <div style="display: flex; flex-direction: column; margin-bottom: 15px">-->
-<!--                                    <label>Бренд</label>-->
-<!--                                    <input class="brand-input" type="text" placeholder="Введите бренд">-->
-<!--                                    <p class="helper-text-brand" style="display: none;color: darkred"></p>-->
-<!--                                </div>-->
-                            </div>
+                            </fieldset>
                         </div>
-                        <div class="row method-brute">
-                            <div class="col-md">
-                                <fieldset>
-                                    <legend>
-                                        Подборка артикула
-                                    </legend>
-                                    <div>
-                                        <h6>Примеры для подборки артикула*</h6>
-                                        <p>Скопировать паттерны ниже</p>
+                        <div class="col-md-4">
+                            <fieldset>
+                                <legend>
+                                    Выборка склада
+                                </legend>
+                                <select class="selectpicker show-menu-arrow"
+                                        data-style="form-control"
+                                        title="Выберите город">
+                                    <option value="almaty">Алматы</option>
+                                </select>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-4">
+                            <fieldset>
+                                <legend>
+                                    Поля для отображения в Excel
+                                </legend>
+                                <div id="excel-checkboxes-wrapper">
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 30px">
+                        <div class="col-md">
+                            <fieldset>
+                                <legend>
+                                    Выберите метод подбора
+                                </legend>
+                                <select class="method"
+                                        data-style="form-control"
+                                        title="Выберите город">
+                                    <option value="methodBrandArticle" selected>По поиску артикулу</option>
+                                    <option value="methodBrute">По подборке артикула</option>
+                                    <option value="methodImportExcel">По импорту excel файла</option>
+                                </select>
+                            </fieldset>
+                            <div style="background-color: #1b1e21; height: 1px; margin: 15px 0;"></div>
+                        </div>
+                    </div>
+                    <div class="row method-brand-article">
+                        <div class="col-md">
+                            <fieldset>
+                                <legend>
+                                    Метод поиска
+                                </legend>
+                            </fieldset>
 
-                                        <ul>
-                                            <li>Для добавления заглавных букв или буквы скопировать --> A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z</li>
-                                            <li>Для добавления прописных букв или буквы скопировать --> a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z</li>
-                                            <li>Для добавления цифр скопировать --> 1,2,3,4,5,6,7,8,9,0</li>
-                                            <li style="color: darkred">Обязательно разделять знаки запятыми*</li>
-                                            <li style="color: green">Можно комбинировать заглавные, прописные буквы и цифры</li>
-                                            <li style="color: cornflowerblue">Примеры ввода: 0,1,A</li>
-                                            <li style="color: cornflowerblue">Примеры ввода: 1,A,4,a</li>
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <div style="display: flex; flex-direction: column; margin-bottom: 15px">
-                                            <label>Введите паттерн</label>
-                                            <input class="brute-force" type="text" placeholder="Введите патерн" value="A,1">
-                                            <p class="helper-text" style="display: none;color: darkred"></p>
-                                        </div>
-
-                                        <div style="display: flex; flex-direction: column;">
-                                            <label>Выберите макс длину артикула</label>
-                                            <select class="brut-length"
-                                                    data-style="form-control"
-                                                    title="Выберите город">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </fieldset>
+                            <div style="display: flex; flex-direction: column; margin-bottom: 15px">
+                                <label>Артикул</label>
+                                <input class="articul-input" type="text" placeholder="Введите артикул">
+                                <p class="helper-text-article" style="display: none;color: darkred"></p>
                             </div>
+                            <!--                                <div style="display: flex; flex-direction: column; margin-bottom: 15px">-->
+                            <!--                                    <label>Бренд</label>-->
+                            <!--                                    <input class="brand-input" type="text" placeholder="Введите бренд">-->
+                            <!--                                    <p class="helper-text-brand" style="display: none;color: darkred"></p>-->
+                            <!--                                </div>-->
+                        </div>
+                    </div>
+                    <div class="row method-brute">
+                        <div class="col-md">
+                            <fieldset>
+                                <legend>
+                                    Подборка артикула
+                                </legend>
+                                <div>
+                                    <h6>Примеры для подборки артикула*</h6>
+                                    <p>Скопировать паттерны ниже</p>
+
+                                    <ul>
+                                        <li>Для добавления заглавных букв или буквы скопировать --> A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z</li>
+                                        <li>Для добавления прописных букв или буквы скопировать --> a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z</li>
+                                        <li>Для добавления цифр скопировать --> 1,2,3,4,5,6,7,8,9,0</li>
+                                        <li style="color: darkred">Обязательно разделять знаки запятыми*</li>
+                                        <li style="color: green">Можно комбинировать заглавные, прописные буквы и цифры</li>
+                                        <li style="color: cornflowerblue">Примеры ввода: 0,1,A</li>
+                                        <li style="color: cornflowerblue">Примеры ввода: 1,A,4,a</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <div style="display: flex; flex-direction: column; margin-bottom: 15px">
+                                        <label>Введите паттерн</label>
+                                        <input class="brute-force" type="text" placeholder="Введите патерн" value="A,1">
+                                        <p class="helper-text" style="display: none;color: darkred"></p>
+                                    </div>
+
+                                    <div style="display: flex; flex-direction: column;">
+                                        <label>Выберите макс длину артикула</label>
+                                        <select class="brut-length"
+                                                data-style="form-control"
+                                                title="Выберите город">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row method-import-excel">
+                        <div class="col-md">
+                            <fieldset>
+                                <legend>
+                                    Метод импорта excel файла
+                                </legend>
+                                <div style="display: flex; flex-direction: column;">
+                                    <input type="file" id="excelFile" name="excelFile">
+                                    <p class="helper-text-excel" style="display: none;color: darkred"></p>
+                                </div>
+                            </fieldset>
+                        </div>
                     </div>
 
-                        <button class="btn btn-primary" style="margin: 20px 0;">Получить Базу</button>
-                        <progress style="display: none" class="pure-material-progress-linear"/>
+                    <button class="btn btn-primary" style="margin: 20px 0;">Получить Базу</button>
+                    <progress style="display: none" class="pure-material-progress-linear"/>
                 </div>
 
                 <h2>Логи</h2>
@@ -152,32 +166,32 @@
             <input type="checkbox"
                    class="{{className}}"
                    {{#checked}}checked{{/checked}}
-                   {{#disabled}}disabled{{/disabled}}
-                   name="{{value}}"
-                   value="{{value}}" >
+            {{#disabled}}disabled{{/disabled}}
+            name="{{value}}"
+            value="{{value}}" >
             <label>
                 {{name}}
             </label>
         </div>
         {{/checkboxList}}
     </script>
-        <script id="footer-template" type="text/html">
-            <footer>
-                <p>{{date}}</p>
-            </footer>
-        </script>
+    <script id="footer-template" type="text/html">
+        <footer>
+            <p>{{date}}</p>
+        </footer>
+    </script>
 
-        <script id="logs-template" type="text/html">
-            {{#logs}}
-            <p class="{{status}}">{{message}}</p>
-            {{/logs}}
-        </script>
+    <script id="logs-template" type="text/html">
+        {{#logs}}
+        <p class="{{status}}">{{message}}</p>
+        {{/logs}}
+    </script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
-        <script src="socket.io/socket.io.js"></script>
-        <script src="/js/socket.io-stream.js"></script>
-        <script src="/js/chat.js"></script>
-    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="/js/socket.io-stream.js"></script>
+    <script src="/js/chat.js"></script>
+</body>
 </html>
