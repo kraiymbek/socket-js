@@ -246,39 +246,39 @@ io.on('connection', (socket) => {
             logs.push({ status: 'system', message: `---------Инициализация сервиса-----------------`})
             io.emit('excelFormationProcess', { logs });
 
-            // try {
-            //     // init request
-            //     await getBrands(selectedCity, 'АA1-------');
-            //     logs.push({
-            //         status: 'system',
-            //         message: `--------- Инициализация сервиса прошла успешна -----------------`
-            //     })
-            //     io.emit('excelFormationProcess', {logs});
-            //     continueRequest = true;
-            // } catch (err) {
-            //     callback();
-            //     logs.push({ status: 'error', message: `--------- Провал инициализации сервиса -----------------`})
-            //     io.emit('excelFormationProcess', { logs });
-            //
-            //     if (err && err.response && err.response.data) {
-            //         if (err.response.data.Message) {
-            //             logs.push({ status: 'error',
-            //                 message:'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.Message })
-            //             io.emit('excelFormationProcess', { logs });
-            //         }
-            //
-            //         if (err.response.data.ErrorMessage) {
-            //             logs.push({ status: 'error',
-            //                 message: 'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.ErrorMessage });
-            //             io.emit('excelFormationProcess', { logs });
-            //         }
-            //     }
-            // }
+            try {
+                // init request
+                await getBrands(selectedCity, 'АA1-------');
+                logs.push({
+                    status: 'system',
+                    message: `--------- Инициализация сервиса прошла успешна -----------------`
+                })
+                io.emit('excelFormationProcess', {logs});
+                continueRequest = true;
+            } catch (err) {
+                callback();
+                logs.push({ status: 'error', message: `--------- Провал инициализации сервиса -----------------`})
+                io.emit('excelFormationProcess', { logs });
+
+                if (err && err.response && err.response.data) {
+                    if (err.response.data.Message) {
+                        logs.push({ status: 'error',
+                            message:'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.Message })
+                        io.emit('excelFormationProcess', { logs });
+                    }
+
+                    if (err.response.data.ErrorMessage) {
+                        logs.push({ status: 'error',
+                            message: 'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.ErrorMessage });
+                        io.emit('excelFormationProcess', { logs });
+                    }
+                }
+            }
 
             let commonIndex = 0;
             let commonRows = 0;
 
-            if (!continueRequest) {
+            if (continueRequest) {
                 inputWorksheet.eachRow(function(row, rowNumber) {
                     if (rowNumber === 1) {
                         row.values.forEach((item, index) => {
