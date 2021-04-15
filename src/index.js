@@ -345,6 +345,7 @@ io.on('connection', (socket) => {
 
                 Promise.allSettled(firstStepPromises)
                     .then(res => {
+                        console.log("allSettledPromise", res)
                         logs.push({status: 'success', message: `Все бренды получены`})
                         io.emit('excelFormationProcess', {logs});
 
