@@ -318,7 +318,7 @@ io.on('connection', (socket) => {
                                         return products;
                                     })
                                     .catch(err => {
-                                        if (err && err.response.data) {
+                                        if (err && err.response && err.response.data) {
                                             if (err.response.data.Message) {
                                                 logs.push({ status: 'error',
                                                     message:'ОТВЕТ ОТ СЕРВЕРА PHAETON: ' + err.response.data.Message + ' на запросе артикуля' + item.Article + ' и бренда ' + item.Brand})
