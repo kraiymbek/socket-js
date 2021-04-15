@@ -297,8 +297,7 @@ io.on('connection', (socket) => {
                                 getProducts(selectedCity, currentArticle, currentBrand, message.filterChecked)
                                     .then(res => res.Items)
                                     .then(products => {
-                                        console.log("prods", products)
-                                        logs.push({ status: 'main', message: `-------------- Получена позиция для артикуля --${item.Article}-- и бренда --${item.Brand}-- === ${products.length} штук`})
+                                        logs.push({ status: 'main', message: `-------------- Получена позиция для артикуля --${currentArticle}-- и бренда --${currentBrand}-- === ${products.length} штук`})
                                         io.emit('excelFormationProcess', { logs });
                                         commonRows += products.length;
 
