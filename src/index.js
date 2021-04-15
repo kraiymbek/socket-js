@@ -290,7 +290,7 @@ io.on('connection', (socket) => {
                         const currentArticle = row.values[articleIndex];
 
                         if (currentArticle && currentBrand) {
-                            logs.push({ status: 'success', message: `Строка №${rowNumber}: Бренд - ${currentBrand}, артикуль - ${currentArticle} `})
+                            logs.push({ status: 'success', message: `Строка №${rowNumber - 1}: Бренд - ${currentBrand}, артикуль - ${currentArticle} `})
                             io.emit('excelFormationProcess', { logs });
 
                             firstStepPromises.push(
@@ -309,7 +309,7 @@ io.on('connection', (socket) => {
                                             }
 
                                             commonIndex++;
-                                            worksheet.addRow(rowAdding)
+                                            outputWorksheet.addRow(rowAdding)
                                             logs.push({ status: 'success', message: `#${commonIndex} Получена позиция для артикуля ${product.Article} и бренда ${product.Brand}`})
                                             logs.push({ status: 'success', message: `В excel файл добавлена позиция артикул: ${rowAdding.Article}; название: ${rowAdding.Name}`})
                                         });
