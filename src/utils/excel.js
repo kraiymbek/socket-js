@@ -18,6 +18,7 @@ const getProducts = (city, article, brand, sources) => {
         UserGuid: credKeys[city].guid,
         ApiKey: credKeys[city].apiKey,
         Brand: brand,
+        includeAnalogs: false,
     };
 
     if (sources.InStock) {
@@ -28,9 +29,9 @@ const getProducts = (city, article, brand, sources) => {
         params['Sources[]'] = 2;
     }
 
-    if (sources.RemoteSuppliers) {
-        params['Sources[]'] = 3;
-    }
+    // if (sources.RemoteSuppliers) {
+    //     params['Sources[]'] = 3;
+    // }
 
     return axios.get(encodeURI(`http://api.phaeton.kz/api/Search`), { params })
         .then(res => res.data);
