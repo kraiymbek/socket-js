@@ -347,9 +347,6 @@ io.on('connection', (socket) => {
                         logs.push({status: 'success', message: `Все бренды получены`})
                         io.emit('excelFormationProcess', {logs});
 
-                        return Promise.allSettled(res[0].value);
-                    })
-                    .then(data => {
                         const stream = ss.createStream();
                         outputWorkbook.xlsx.write(stream);
                         logs.push({status: 'success', message: `Excel сформирован!`})
